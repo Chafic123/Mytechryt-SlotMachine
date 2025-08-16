@@ -91,7 +91,9 @@ const GlossSheen = styled(Box)(() => ({
   animation: `${gloss} 3.5s linear infinite`,
 }));
 
-const Strip = styled(Box)<{ $spinning: boolean }>(({ $spinning }) => ({
+const Strip = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "$spinning", 
+})<{ $spinning: boolean }>(({ $spinning }) => ({
   position: "absolute",
   top: 0,
   left: 0,
@@ -104,6 +106,7 @@ const Strip = styled(Box)<{ $spinning: boolean }>(({ $spinning }) => ({
   padding: "12px 0",
   animation: $spinning ? `${spinLinear} var(--loopDuration) linear infinite` : "none",
 }));
+
 
 const Cell = styled(Box)(({ theme }) => ({
   height: "var(--symbolHeight)",
@@ -170,7 +173,7 @@ const CornerAccent = styled(Box)(({ theme }) => ({
 
 const Reel: React.FC<ReelProps> = ({ reelIndex, isSpinning, width = 120, height = 400 }) => {
   const stripRef = useRef<HTMLDivElement>(null);
-  const symbolHeight = 80;
+  const symbolHeight = height / 3; 
   const viewportHeight = height;
   const loopDurationMs = 2000;
 

@@ -73,8 +73,6 @@ const GameLayout: React.FC = () => {
 
   return (
 
-
-    
     <DashboardContainer>
         
       <ValueBox>

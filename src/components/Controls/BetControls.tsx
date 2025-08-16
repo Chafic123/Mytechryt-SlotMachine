@@ -1,11 +1,20 @@
 // /components/Controls/BetControls.tsx
-import React from "react";
-import { Button, Stack, Typography, IconButton, Tooltip } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Button,
+  Stack,
+  Typography,
+  IconButton,
+  Tooltip,
+  CircularProgress,
+  Box,
+} from "@mui/material";
 import { useGame } from "../../context/GameContext";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 const BetControls: React.FC = () => {
   const { balance, bet, setBet, spinning, spinReels, resetGame } = useGame();
+  const [restarting, setRestarting] = useState(false);
 
   const minBet = 10; // Minimum bet amount
 
@@ -26,15 +35,16 @@ const BetControls: React.FC = () => {
   };
 
   const handleRestart = () => {
-    if (
-      !spinning &&
-      window.confirm("Are you sure you want to restart the game?")
-    ) {
-      resetGame();
-    }
-  };
+  if (!spinning) {
+    setRestarting(true);
+    resetGame(); // your existing reset logic
+    setTimeout(() => setRestarting(false), 1000); // keep spinner visible briefly
+  }
+};
 
-  return (
+
+return (
+  <>
     <Stack
       direction="row"
       spacing={2}
@@ -135,7 +145,28 @@ const BetControls: React.FC = () => {
         {spinning ? "Spinning..." : "Spin"}
       </Button>
     </Stack>
-  );
+
+    {/* Restart Spinner Overlay */}
+    {restarting && (
+      <Box
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.6)",
+          zIndex: 9999,
+        }}
+      >
+        <CircularProgress size={80} thickness={4} color="warning" />
+      </Box>
+    )}
+  </>
+);
 };
 
 export default BetControls;
