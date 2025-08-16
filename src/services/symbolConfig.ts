@@ -1,5 +1,3 @@
-// /services/symbolConfig.ts
-
 export type SymbolType = {
   id: string;
   name: string;

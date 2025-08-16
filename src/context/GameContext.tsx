@@ -31,8 +31,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [results, setResults] = useState<number[]>(Array(REEL_COUNT).fill(0));
   const [offsets, setOffsets] = useState<number[]>(Array(REEL_COUNT).fill(0));
 
-  const { playSound } = useAudio(); // 🎵 use sound system
+  const { playSound } = useAudio(); 
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const calculateWinnings = (resultIndices: number[]): number => {
     const [a, b, c] = resultIndices;
     if (a === b && b === c) {
@@ -46,7 +47,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const spinReels = React.useCallback(() => {
     if (balance < bet || spinning) return;
 
-    playSound("spin.mp3"); // 🎵 play spin sound
+    playSound("spin.mp3"); 
 
     // Deduct bet, reset win
     setBalance((b) => b - bet);
@@ -73,28 +74,27 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (reelIndex === REEL_COUNT - 1) {
           const winAmount = calculateWinnings(newResults);
           if (winAmount > 0) {
-            playSound("win.mp3"); // 🎵 win sound
+            playSound("win.mp3");
             setWinnings(winAmount);
             setBalance((b) => b + winAmount);
           } else {
-            playSound("lose.mp3"); // 🎵 lose sound
+            playSound("lose.mp3"); 
           }
           setSpinning(false);
         }
       }, SPIN_DURATION + reelDelay);
     });
-  }, [balance, bet, spinning, playSound]);
+  }, [balance, bet, spinning, playSound, calculateWinnings]);
 
   // --- Reset game ---
   const resetGame = React.useCallback(() => {
-    playSound("restart.mp3"); // 🎵 restart sound
     setBalance(START_BALANCE);
     setBet(DEFAULT_BET);
     setWinnings(0);
     setSpinning(false);
     setResults(Array(REEL_COUNT).fill(0));
     setOffsets(Array(REEL_COUNT).fill(0));
-  }, [playSound]);
+  }, []);
 
   // --- Context Value ---
   const contextValue = React.useMemo(
@@ -115,9 +115,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;
 };
 
-// ---------------------------
-// 🎯 Hook
-// ---------------------------
 // eslint-disable-next-line react-refresh/only-export-components
 export const useGame = () => {
   const context = useContext(GameContext);

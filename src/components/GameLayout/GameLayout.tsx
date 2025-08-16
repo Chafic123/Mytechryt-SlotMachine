@@ -5,17 +5,17 @@ import { styled } from "@mui/material/styles";
 
 const DashboardContainer = styled(Box)(({ theme }) => ({
   display: "flex",
-  flexWrap: "wrap", // ← allows wrapping on small screens
-  justifyContent: "center", // center items horizontally
+  flexWrap: "wrap",
+  justifyContent: "center",
   alignItems: "center",
   width: "90%",
   maxWidth: 900,
-  height: "auto", // let it grow when wrapping
+  height: "auto",
   padding: theme.spacing(1, 2),
   marginBottom: theme.spacing(2),
-  background: `linear-gradient(to right, 
-              rgba(0,0,0,0.6) 0%, 
-              rgba(20,20,40,0.7) 50%, 
+  background: `linear-gradient(to right,
+              rgba(0,0,0,0.6) 0%,
+              rgba(20,20,40,0.7) 50%,
               rgba(0,0,0,0.6) 100%)`,
   borderRadius: 16,
   border: `1px solid ${theme.palette.warning.main}`,
@@ -23,7 +23,7 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
               inset 0 1px 1px rgba(255,255,255,0.1)`,
   position: "relative",
   overflow: "hidden",
-  gap: theme.spacing(2),
+  gap: theme.spacing(9),
 
   "&:not(:last-child)": {
     "@media (max-width:600px)": {
@@ -40,7 +40,6 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
       background: `linear-gradient(to bottom, transparent, ${theme.palette.warning.main}, transparent)`,
     },
   },
-  // spacing between items when wrapped
 }));
 
 const ValueBox = styled(Box)(({ theme }) => ({
@@ -61,9 +60,9 @@ const ValueBox = styled(Box)(({ theme }) => ({
       transform: "translateY(-50%)",
       height: 60,
       width: 3,
-      background: `linear-gradient(to bottom, 
-                  transparent, 
-                  ${theme.palette.warning.main}, 
+      background: `linear-gradient(to bottom,
+                  transparent,
+                  ${theme.palette.warning.main},
                   transparent)`,
     },
   },

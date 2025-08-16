@@ -25,7 +25,7 @@ const Dashboard: React.FC = () => {
       <Box
         sx={{
           display: "flex",
-          gap: 2,
+          gap: 5,
           justifyContent: "center",
           overflow: "hidden",
           flexWrap: "wrap",

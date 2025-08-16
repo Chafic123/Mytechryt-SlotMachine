@@ -19,14 +19,11 @@ const gloss = keyframes`
 
 const spinLinear = keyframes`
   0% { transform: translateY(0); }
-  20% { transform: translateY(calc(var(--spinDistance) * 0.3)); }
-  50% { transform: translateY(calc(var(--spinDistance) * 0.6)); }
-  80% { transform: translateY(calc(var(--spinDistance) * 0.9)); }
   100% { transform: translateY(var(--spinDistance)); }
 `;
 
 const bounceStop = keyframes`
-  0% { transform: translateY(var(--targetPos)); }
+  0% { transform: translateY(var(--currentPos)); }
   60% { transform: translateY(calc(var(--targetPos) - 10px)); }
   80% { transform: translateY(calc(var(--targetPos) + 5px)); }
   100% { transform: translateY(var(--targetPos)); }
@@ -207,7 +204,6 @@ const Reel: React.FC<ReelProps> = ({
 
   const [targetIndex, setTargetIndex] = useState<number | null>(null);
 
-  // Create enough symbols to fill the viewport and allow for spinning
   const stripSymbols = useMemo(() => {
     const visibleSymbols = Math.ceil(viewportHeight / symbolHeight) + 2;
     return Array.from(
@@ -231,7 +227,6 @@ const Reel: React.FC<ReelProps> = ({
           "transform 800ms cubic-bezier(0.16, 1, 0.3, 1)";
       }
     } else {
-      // Reset transition so it spins infinitely
       if (stripRef.current) {
         stripRef.current.style.transition = "none";
       }
@@ -256,7 +251,6 @@ const Reel: React.FC<ReelProps> = ({
       }
     >
       <InnerMask>
-        {/* Decorative accents */}
         <CornerAccent />
         <CornerAccent />
         <CornerAccent />
@@ -281,7 +275,6 @@ const Reel: React.FC<ReelProps> = ({
           ))}
         </Strip>
 
-        {/* Visual polish */}
         <EdgeFadeTop />
         <EdgeFadeBottom />
         <GlossSheen aria-hidden />

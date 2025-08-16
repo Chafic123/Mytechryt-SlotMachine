@@ -1,4 +1,3 @@
-// /components/Controls/BetControls.tsx
 import React, { useState } from "react";
 import {
   Button,
@@ -48,8 +47,8 @@ const BetControls: React.FC = () => {
         direction="row"
         spacing={2}
         alignItems="center"
-        flexWrap="wrap" // allows items to move to next line
-        justifyContent="center" // optional: center if wrapped
+        flexWrap="wrap"
+        justifyContent="center" 
         sx={{
           padding: 1,
           backgroundColor: "rgba(0, 0, 0, 0.5)",
