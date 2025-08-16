@@ -20,7 +20,7 @@ function App() {
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
-          backgroundImage: `url(./backgrounds/SlotBack.avif)`,
+          backgroundImage: `url(./backgrounds/SlotBack3-.jpg)`,
           paddingTop: 14,
         }}
       >

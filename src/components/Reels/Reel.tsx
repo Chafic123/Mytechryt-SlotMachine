@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect } from "react";
+import React, { useMemo, useRef, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { styled, keyframes } from "@mui/material/styles";
 import { SYMBOLS } from "../../services/symbolConfig";
@@ -92,7 +92,7 @@ const GlossSheen = styled(Box)(() => ({
 }));
 
 const Strip = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "$spinning", 
+  shouldForwardProp: (prop) => prop !== "$spinning",
 })<{ $spinning: boolean }>(({ $spinning }) => ({
   position: "absolute",
   top: 0,
@@ -104,9 +104,10 @@ const Strip = styled(Box, {
   alignItems: "stretch",
   gap: 8,
   padding: "12px 0",
-  animation: $spinning ? `${spinLinear} var(--loopDuration) linear infinite` : "none",
+  animation: $spinning
+    ? `${spinLinear} var(--loopDuration) linear infinite`
+    : "none",
 }));
-
 
 const Cell = styled(Box)(({ theme }) => ({
   height: "var(--symbolHeight)",
@@ -130,7 +131,8 @@ const Cell = styled(Box)(({ theme }) => ({
     left: 0,
     right: 0,
     height: "50%",
-    background: "linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(255,255,255,0))",
+    background:
+      "linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(255,255,255,0))",
   },
 }));
 
@@ -152,7 +154,10 @@ const Label = styled(Typography)(({ theme }) => ({
   fontSize: 11,
   fontWeight: 600,
   letterSpacing: 0.5,
-  color: theme.palette.mode === "dark" ? theme.palette.grey[300] : theme.palette.grey[800],
+  color:
+    theme.palette.mode === "dark"
+      ? theme.palette.grey[300]
+      : theme.palette.grey[800],
   opacity: 0.9,
   textShadow: "0 1px 1px rgba(0,0,0,0.2)",
   zIndex: 1,
@@ -171,31 +176,48 @@ const CornerAccent = styled(Box)(({ theme }) => ({
   "&:nth-of-type(4)": { bottom: 8, right: 8 },
 }));
 
-const Reel: React.FC<ReelProps> = ({ reelIndex, isSpinning, width = 120, height = 400 }) => {
+const Reel: React.FC<ReelProps> = ({
+  reelIndex,
+  isSpinning,
+  width = 120,
+  height = 350,
+}) => {
   const stripRef = useRef<HTMLDivElement>(null);
-  const symbolHeight = height / 3; 
+  const symbolHeight = height / 3.0;
   const viewportHeight = height;
   const loopDurationMs = 2000;
+
+  const [targetIndex, setTargetIndex] = useState<number | null>(null);
 
   // Create enough symbols to fill the viewport and allow for spinning
   const stripSymbols = useMemo(() => {
     const visibleSymbols = Math.ceil(viewportHeight / symbolHeight) + 2;
-    const repeatedSymbols = Array(visibleSymbols * 2).fill(null).map((_, i) => 
-      SYMBOLS[i % SYMBOLS.length]
+    return Array.from(
+      { length: visibleSymbols * 2 },
+      (_, i) => SYMBOLS[i % SYMBOLS.length]
     );
-    return repeatedSymbols;
-  }, [viewportHeight]);
+  }, [symbolHeight, viewportHeight]);
 
   const totalTravel = stripSymbols.length * symbolHeight;
 
-  // Handle the stopping animation
+  // Handle stop animation
   useEffect(() => {
-    if (!isSpinning && stripRef.current) {
-      // Calculate a random position that aligns with a symbol
+    if (!isSpinning) {
       const randomIndex = Math.floor(Math.random() * SYMBOLS.length);
-      const targetPosition = randomIndex * symbolHeight;
-      
-      stripRef.current.style.transform = `translateY(-${targetPosition}px)`;
+      setTargetIndex(randomIndex);
+
+      if (stripRef.current) {
+        const targetPosition = randomIndex * symbolHeight;
+        stripRef.current.style.transform = `translateY(-${targetPosition}px)`;
+        stripRef.current.style.transition =
+          "transform 800ms cubic-bezier(0.16, 1, 0.3, 1)";
+      }
+    } else {
+      // Reset transition so it spins infinitely
+      if (stripRef.current) {
+        stripRef.current.style.transition = "none";
+      }
+        setTargetIndex(null);
     }
   }, [isSpinning, symbolHeight]);
 
@@ -204,34 +226,44 @@ const Reel: React.FC<ReelProps> = ({ reelIndex, isSpinning, width = 120, height 
       role="group"
       aria-roledescription="slot reel"
       aria-label={`Reel ${reelIndex + 1}`}
-      sx={{
-        "--reelWidth": `${width}px`,
-        "--symbolHeight": `${symbolHeight}px`,
-        "--viewportHeight": `${viewportHeight}px`,
-        "--loopDuration": `${loopDurationMs}ms`,
-        "--spinDistance": `${totalTravel}px`,
-      } as React.CSSProperties}
+      aria-live="polite"
+      sx={
+        {
+          "--reelWidth": `${width}px`,
+          "--symbolHeight": `${symbolHeight}px`,
+          "--viewportHeight": `${viewportHeight}px`,
+          "--loopDuration": `${loopDurationMs}ms`,
+          "--spinDistance": `${totalTravel}px`,
+        } as React.CSSProperties
+      }
     >
       <InnerMask>
+        {/* Decorative accents */}
         <CornerAccent />
         <CornerAccent />
         <CornerAccent />
         <CornerAccent />
+
         <Strip
           ref={stripRef}
-          $spinning={isSpinning}
+          $spinning={isSpinning} 
           sx={{
-            transform: `translateY(${isSpinning ? 0 : Math.floor(Math.random() * SYMBOLS.length) * symbolHeight}px)`,
-            transition: !isSpinning ? "transform 800ms cubic-bezier(0.16, 1, 0.3, 1)" : undefined,
+            transform: isSpinning
+              ? `translateY(0)`
+              : targetIndex !== null
+              ? `translateY(-${targetIndex * symbolHeight}px)`
+              : "translateY(0)",
           }}
         >
           {stripSymbols.map((symbol, i) => (
             <Cell key={`${symbol.id}-${i}`}>
               <Icon aria-hidden>{symbol.emoji}</Icon>
-              <Label variant="caption">{}</Label>
+              <Label variant="caption">{symbol.name}</Label>
             </Cell>
           ))}
         </Strip>
+
+        {/* Visual polish */}
         <EdgeFadeTop />
         <EdgeFadeBottom />
         <GlossSheen aria-hidden />
