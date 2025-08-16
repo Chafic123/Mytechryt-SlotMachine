@@ -26,11 +26,11 @@ const pulseGlow = keyframes`
   100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
 `;
 
-// Styled Components
 const ReelFrame = styled(Box)(({ theme }) => ({
   position: "relative",
   display: "grid",
   placeItems: "center",
+  flexDirection: "column",
   borderRadius: 20,
   width: "var(--reelWidth)",
   height: "var(--viewportHeight)",
@@ -53,12 +53,12 @@ const InnerMask = styled(Box)(({ theme }) => ({
   width: "100%",
   height: "100%",
   overflow: "hidden",
-  background: `radial-gradient(150% 200% at 50% 0%, 
-              rgba(255,255,255,0.1), 
-              rgba(255,255,255,0.05) 40%, 
-              rgba(0,0,0,0.4) 100%), 
+  background: `radial-gradient(150% 200% at 50% 0%,
+              rgba(255,255,255,0.1),
+              rgba(255,255,255,0.05) 40%,
+              rgba(0,0,0,0.4) 100%),
               ${theme.palette.mode === "dark" ? "#0a0d14" : "#0c0f18"}`,
-  boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.1), 
+  boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.1),
               inset 0 -25px 50px rgba(0,0,0,0.7)`,
 }));
 
@@ -68,15 +68,16 @@ const EdgeFadeTop = styled(Box)(() => ({
   top: 0,
   left: 0,
   right: 0,
-  height: 40,
+  height: 20,
   background: "linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0))",
   zIndex: 2,
+  
 }));
 
 const EdgeFadeBottom = styled(EdgeFadeTop)({
   top: "unset",
   bottom: 0,
-  background: "linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0))",
+  background: "linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))",
 });
 
 const GlossSheen = styled(Box)(() => ({
@@ -112,11 +113,12 @@ const Strip = styled(Box, {
 const Cell = styled(Box)(({ theme }) => ({
   height: "var(--symbolHeight)",
   width: "100%",
-  borderRadius: 12,
+
+  borderRadius: 8,
   background:
     theme.palette.mode === "dark"
       ? "linear-gradient(180deg, rgba(45,50,70,0.9), rgba(30,35,50,0.95))"
-      : "linear-gradient(180deg, rgba(245,248,255,0.95), rgba(235,240,255,0.96))",
+      : "linear-gradient(180deg, rgba(245,248,255,0.95), rgba(146, 161, 207, 0.96))",
   boxShadow: `inset 0 2px 1px rgba(255,255,255,0.3), 
               inset 0 -3px 8px rgba(0,0,0,0.4), 
               0 5px 12px rgba(0,0,0,0.4)`,
@@ -130,7 +132,7 @@ const Cell = styled(Box)(({ theme }) => ({
     top: 0,
     left: 0,
     right: 0,
-    height: "50%",
+    height: "100%",
     background:
       "linear-gradient(to bottom, rgba(255,255,255,0.15), rgba(255,255,255,0))",
   },

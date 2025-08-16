@@ -22,7 +22,15 @@ const Dashboard: React.FC = () => {
       <GameLayout />
 
       {/* Reels */}
-      <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          justifyContent: "center",
+          overflow: "hidden",
+          flexWrap: "wrap",
+        }}
+      >
         <Reel reelIndex={0} isSpinning={spinning} />
         <Reel reelIndex={1} isSpinning={spinning} />
         <Reel reelIndex={2} isSpinning={spinning} />

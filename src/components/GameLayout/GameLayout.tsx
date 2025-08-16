@@ -5,11 +5,12 @@ import { styled } from "@mui/material/styles";
 
 const DashboardContainer = styled(Box)(({ theme }) => ({
   display: "flex",
-  justifyContent: "space-around",
+  flexWrap: "wrap", // ← allows wrapping on small screens
+  justifyContent: "center", // center items horizontally
   alignItems: "center",
   width: "90%",
-  maxWidth: 800,
-  height: 80,
+  maxWidth: 900,
+  height: "auto", // let it grow when wrapping
   padding: theme.spacing(1, 2),
   marginBottom: theme.spacing(2),
   background: `linear-gradient(to right, 
@@ -22,6 +23,24 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
               inset 0 1px 1px rgba(255,255,255,0.1)`,
   position: "relative",
   overflow: "hidden",
+  gap: theme.spacing(2),
+
+  "&:not(:last-child)": {
+    "@media (max-width:600px)": {
+      "&::after": { display: "none" },
+    },
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      right: -16,
+      top: "50%",
+      transform: "translateY(-50%)",
+      height: 60,
+      width: 3,
+      background: `linear-gradient(to bottom, transparent, ${theme.palette.warning.main}, transparent)`,
+    },
+  },
+  // spacing between items when wrapped
 }));
 
 const ValueBox = styled(Box)(({ theme }) => ({
@@ -40,8 +59,8 @@ const ValueBox = styled(Box)(({ theme }) => ({
       right: -16,
       top: "50%",
       transform: "translateY(-50%)",
-      height: 40,
-      width: 1,
+      height: 60,
+      width: 3,
       background: `linear-gradient(to bottom, 
                   transparent, 
                   ${theme.palette.warning.main}, 
@@ -55,8 +74,8 @@ const ValueLabel = styled(Typography)(({ theme }) => ({
   fontWeight: 600,
   color: theme.palette.warning.main,
   textTransform: "uppercase",
-  letterSpacing: 1,
-  marginBottom: theme.spacing(0.5),
+  letterSpacing: 2,
+  marginBottom: theme.spacing(0),
 }));
 
 const ValueText = styled(Typography)(({ theme }) => ({
@@ -72,36 +91,37 @@ const GameLayout: React.FC = () => {
   const theme = useTheme();
 
   return (
-
     <DashboardContainer>
-        
       <ValueBox>
         <ValueLabel>Balance</ValueLabel>
         <ValueText sx={{ color: theme.palette.success.light }}>
           ${balance.toLocaleString()}
         </ValueText>
       </ValueBox>
-      
+
       <ValueBox>
         <ValueLabel>Bet</ValueLabel>
         <ValueText sx={{ color: theme.palette.warning.light }}>
           ${bet.toLocaleString()}
         </ValueText>
       </ValueBox>
-      
+
       <ValueBox>
         <ValueLabel>Winnings</ValueLabel>
-        <ValueText sx={{ 
-          color: winnings > 0 ? theme.palette.success.main : theme.palette.common.white,
-          animation: winnings > 0 ? "pulse 1.5s infinite" : "none"
-        }}>
+        <ValueText
+          sx={{
+            color:
+              winnings > 0
+                ? theme.palette.success.main
+                : theme.palette.common.white,
+            animation: winnings > 0 ? "pulse 1.5s infinite" : "none",
+          }}
+        >
           ${winnings.toLocaleString()}
         </ValueText>
       </ValueBox>
     </DashboardContainer>
   );
 };
-
-
 
 export default GameLayout;

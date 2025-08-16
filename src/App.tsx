@@ -7,21 +7,22 @@ function App() {
     <GameProvider>
       <Box
         sx={{
-          minHeight: "100vh",
+          minHeight: "87vh",
           width: "100%",
+          overflowY: "hidden",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
-          gap: 4,
+          gap: 6,
           fontFamily: "Roboto, sans-serif",
           backgroundColor: "#121212",
           color: "#ffffff",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundAttachment: "fixed",
-          backgroundImage: `url(./backgrounds/SlotBack3-.jpg)`,
-          paddingTop: 14,
+          backgroundImage: `url(./backgrounds/SlotBack.jpeg)`,
+          paddingTop: 10,
         }}
       >
         <Dashboard />
