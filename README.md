@@ -30,3 +30,7 @@ cd Mytechryt-SlotMachine
 npm install
 npm start
 
+## Demo
+
+![Slot Machine Reel Demo](./screenshots/reel-demo.png)
+
