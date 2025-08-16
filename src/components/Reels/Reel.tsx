@@ -10,6 +10,8 @@ interface ReelProps {
   height?: number;
 }
 
+
+
 const gloss = keyframes`
   0% { opacity: 0.4; transform: translateY(-60%) rotateX(60deg); }
   100% { opacity: 0.2; transform: translateY(160%) rotateX(60deg); }
@@ -17,7 +19,17 @@ const gloss = keyframes`
 
 const spinLinear = keyframes`
   0% { transform: translateY(0); }
+  20% { transform: translateY(calc(var(--spinDistance) * 0.3)); }
+  50% { transform: translateY(calc(var(--spinDistance) * 0.6)); }
+  80% { transform: translateY(calc(var(--spinDistance) * 0.9)); }
   100% { transform: translateY(var(--spinDistance)); }
+`;
+
+const bounceStop = keyframes`
+  0% { transform: translateY(var(--targetPos)); }
+  60% { transform: translateY(calc(var(--targetPos) - 10px)); }
+  80% { transform: translateY(calc(var(--targetPos) + 5px)); }
+  100% { transform: translateY(var(--targetPos)); }
 `;
 
 const pulseGlow = keyframes`
@@ -77,7 +89,8 @@ const EdgeFadeTop = styled(Box)(() => ({
 const EdgeFadeBottom = styled(EdgeFadeTop)({
   top: "unset",
   bottom: 0,
-  background: "linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))",
+  background:
+    "linear-gradient(to top, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0))",
 });
 
 const GlossSheen = styled(Box)(() => ({
@@ -92,9 +105,10 @@ const GlossSheen = styled(Box)(() => ({
   animation: `${gloss} 3.5s linear infinite`,
 }));
 
+
 const Strip = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "$spinning",
-})<{ $spinning: boolean }>(({ $spinning }) => ({
+  shouldForwardProp: (prop) => prop !== "$spinning" && prop !== "$stopping",
+})<{ $spinning: boolean; $stopping?: boolean }>(({ $spinning, $stopping }) => ({
   position: "absolute",
   top: 0,
   left: 0,
@@ -105,7 +119,9 @@ const Strip = styled(Box, {
   alignItems: "stretch",
   gap: 8,
   padding: "12px 0",
-  animation: $spinning
+  animation: $stopping
+    ? `${bounceStop} 800ms cubic-bezier(0.25, 0.5, 0.5, 1.2) forwards`
+    : $spinning
     ? `${spinLinear} var(--loopDuration) linear infinite`
     : "none",
 }));
@@ -219,7 +235,7 @@ const Reel: React.FC<ReelProps> = ({
       if (stripRef.current) {
         stripRef.current.style.transition = "none";
       }
-        setTargetIndex(null);
+      setTargetIndex(null);
     }
   }, [isSpinning, symbolHeight]);
 
@@ -248,7 +264,7 @@ const Reel: React.FC<ReelProps> = ({
 
         <Strip
           ref={stripRef}
-          $spinning={isSpinning} 
+          $spinning={isSpinning}
           sx={{
             transform: isSpinning
               ? `translateY(0)`
