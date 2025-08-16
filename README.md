@@ -24,7 +24,9 @@ A modern slot machine built with **React**, **TypeScript**, and **MUI**, featuri
 
 ```bash
 [git clone https://github.com/your-username/Mytechryt-SlotMachine.git]
-cd slot-machine
+
+cd Mytechryt-SlotMachine
+
 npm install
 npm start
 
